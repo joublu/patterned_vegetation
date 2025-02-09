@@ -3,7 +3,8 @@ L=22.839;
 x=linspace(0,L,N);
 
 delta=0.05;
-sigma0=0.0001;
+sigma0=0; %0.0001;
+m = 1; % New parameter m
 eps=0.005;
 a0=3;
 a1=1.3;
@@ -17,10 +18,11 @@ n=(x') *0+n0; w=1./n;
 dx=x(2)-x(1);
 tout=0;
 
+% laplacian with neumann boundary conditions
 Lap=-2*diag(ones(1,N))+diag(ones(1,N-1) ,1)+diag(ones(1,N-1) ,-1);
 Lap(1,2)=2;Lap(N,N-1)=2;
 
-M1=delta*Lap/dx^2+eye(N)*(-1/dt -1);
+M1=delta*Lap/dx^2+eye(N)*(-1/dt -m);
 M2=Lap/dx^2-eye(N);
 
 maxn=[]; spread=[];
@@ -29,7 +31,7 @@ for idx=1:numel(tt)
     a=aa(idx);
     t=tt(idx);
 
-    noise=randn(N,1)*sqrt(dt)*sigma0*sqrt(N);
+    noise= randn(N,1)*sqrt(dt)*sigma0*sqrt(N)*0;
     wnext =(M2 -diag(n.^2))\(-a-noise/dt);
     nnext=M1\(-n/dt -n.^2.*w);
     n=nnext; w=wnext;
@@ -48,7 +50,12 @@ end ;
 
 subplot(2,1,2); hold on;
 plot(aa,maxn);
-at = interp1( spread , aa , 1);
+at = interp1( spread , aa , 1); % revoir ca
+d=delta;
+ap = (3-2*sqrt(2-2*d))/(sqrt(3-2*sqrt(2-2*d)-d)*d);
+disp("test")
+disp(at)
+disp(ap)
 plot([at,at],[0,3], ' --b' );
 xlabel(' a' ); ylabel( ' max(n)' );
 title(sprintf( ' a_d=%g' ,at));
