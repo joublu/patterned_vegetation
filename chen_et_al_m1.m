@@ -22,11 +22,12 @@ sd_list = [];
 for k_int=floor(-N/2+1):floor(N/2)
     k = k_int * (L/(2 * pi));
 
-    n_plus = @(s) ((a0 -s) / 2) + sqrt(((a0 -s).^2) / 4 - 1);
-    n_plus_prime = @(s) -1/2 - (1/4)*(a0 -s)*((((a0 -s)^2) / 4 - 1)^(-1/2));
-    alpha = @(s) - (k^2 * delta) + 1 - (2 * (n_plus(s).^2)) / (k^2 + 1 + n_plus(s)^2);
+    n_plus = @(s) ((a0 -s) / 2) + sqrt(((a0 -s)^2) / 4 - 1);
+    n_plus_prime = @(s) - (a0/2 - s/2)/(2*((a0 - s)^2/4 - 1)^(1/2)) - 1/2;
+    alpha = @(s) - (k^2 * delta) + 1 - (2 * (n_plus(s)^2)) / (k^2 + 1 + n_plus(s)^2);
     beta = @(s) (sigma0 * n_plus(s)^2) / (k^2 + 1 + n_plus(s)^2);
-    alpha_prime = @(s) -(4*n_plus(s)*n_plus_prime(s) * (k^2 + 1 + n_plus(s)^2) - 2*n_plus(s)*n_plus_prime(s) * 2*n_plus(s)) / (k^2 + 1 + n_plus(s)^2)^2; 
+    % alpha_prime = @(s) -(4*n_plus(s)*n_plus_prime(s) * (k^2 + 1 + n_plus(s)^2) - 2*n_plus(s)*n_plus_prime(s) * 2*n_plus(s)) / (k^2 + 1 + n_plus(s)^2)^2; 
+    alpha_prime = @(s) (8*(a0/2 - s/2 + ((a0 - s)^2 - 4)^(1/2)/2)*(a0 - s + ((a0 - s)^2 - 4)^(1/2)))/(((a0 - s)^2 - 4)^(1/2)*((a0 - s + ((a0 - s)^2 - 4)^(1/2))^2 + 4*k^2 + 4)) - (4*(a0 - s + ((a0 - s)^2 - 4)^(1/2))^4)/(((a0 - s)^2 - 4)^(1/2)*((a0 - s + ((a0 - s)^2 - 4)^(1/2))^2 + 4*k^2 + 4)^2);
 
     sp_initial_guess = 0; % always real for initial guess 
     try
