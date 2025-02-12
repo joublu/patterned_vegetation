@@ -1,10 +1,10 @@
-% Turing instability of the modified Klausmeier model (Lecture 24, no advection term)
+% Turing instability of the modified Klausmeier model (only diffusion)
+% From the course of Cinzia Soresina, University of Trento
+% Gives informations on the model in Chen et al. when there is no
 
 clear all
 close all
 clc
-
-% modified Klausmeier (only diffusion)
 
 % parameters trees
 % a: 0.077 - 0.23
@@ -13,7 +13,7 @@ clc
 % parameters grass
 % a: 0.94 - 2.81
 m=0.45; % plant mortality (natural and grazing)
-% aC=0.9; % saddle-node bifurcation point
+aC=0.9; % saddle-node bifurcation point
 d=0.04; % diffusion coefficient for plants
 
 
@@ -43,7 +43,7 @@ DetJs=J11*J22-J21*J12;
 disp(TrJs)
 disp(DetJs)
 
-% Determinant of the charachteristic matrix Mk
+% Determinant of the characteristic matrix Mk
 DetMk=@(kk) d*kk.^2-(J11+d*J22)*kk+DetJs;
 
 plot(kk,DetMk(kk))

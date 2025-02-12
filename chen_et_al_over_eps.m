@@ -1,15 +1,15 @@
-N = 100;
+N = 20;
 L = 22.839;
 x = linspace(0, L, N);
 delta = 0.04;
-sigma0 = 0.0001; % test with 0
-m = 1; %new parameter m
-a0 = 2.5;
-a1 = 1.2;
+sigma0 = 0.0001;
+m = 0.45;
+a0=1;
+a1=0.75;
 dt = 0.1;
-eps_values = 0.006:0.003:0.03;
+eps_values = 0.0005:0.0002:0.002;
 
-% Generate a colormap from green to red
+% colormap from green to red
 num_eps = numel(eps_values);
 colors = interp1([0, 0.5, 1], [0, 1, 0; 1, 1, 0; 1, 0, 0], linspace(0, 1, num_eps));
 
@@ -20,7 +20,7 @@ for i = 1:num_eps
     T = (a0 - a1) / eps;
     tt = 0:dt:T;
     aa = a0 - eps * tt;
-    n0 = a0 / 2 + sqrt(a0^2 / 4 - 1);
+    n0=a0/2+sqrt((a0/(2*m))^2-1);
     n = (x') * 0 + n0;
     w = 1 ./ n;
     dx = x(2) - x(1);
@@ -51,8 +51,10 @@ for i = 1:num_eps
         spread(end + 1) = (max(n) - min(n)) / mean(n);
     end
     h = plot(aa, maxn, 'Color', colors(i, :), 'DisplayName', sprintf('\\epsilon = %g', eps));
-    at = interp1(spread, aa, 1);
-    plot([at, at], [0, 3], '--', 'Color', h.Color, 'DisplayName', sprintf('a_d for \\epsilon = %g', eps));
+    [spreadUnique, uniqueIdx] = unique(spread);
+    aaUnique = aa(uniqueIdx);
+    at = interp1(spreadUnique, aaUnique, 1);
+    plot([at, at], [0, 3], '--', 'Color', h.Color, 'DisplayName', sprintf('a_d for \\epsilon = %g', eps), 'HandleVisibility', 'off');
 end
 
 xlabel('a');
